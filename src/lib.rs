@@ -1,8 +1,10 @@
 use authentication::setup_http_client;
-use errors::TwitchyError;
+use error::{TwitchErrorResponse, TwitchyError};
 
+pub mod ads;
 pub mod authentication;
-pub mod errors;
+pub mod error;
+pub mod response;
 
 pub struct Twitchy {
     pub client_id: String,
