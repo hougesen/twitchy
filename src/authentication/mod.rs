@@ -8,7 +8,13 @@ pub struct GetTwitchAccessTokenResponse {
 }
 
 impl crate::Twitchy {
-    async fn authenticate(&self) -> Result<GetTwitchAccessTokenResponse, TwitchyError> {
+    pub async fn authenticate(&mut self) -> Result<(), TwitchyError> {
+        self.setup_http_client().await
+    }
+
+    async fn fetch_twitch_bearer_token(
+        &self,
+    ) -> Result<GetTwitchAccessTokenResponse, TwitchyError> {
         let http_client = reqwest::Client::new();
 
         let uri = format!("https://id.twitch.tv/oauth2/token?client_id={}&client_secret={}&grant_type=client_credentials", self.client_id, self.client_secret);
@@ -36,7 +42,7 @@ impl crate::Twitchy {
     async fn setup_http_client(&mut self) -> Result<(), TwitchyError> {
         use reqwest::header::{HeaderMap, HeaderValue};
 
-        let token = self.authenticate().await?;
+        let token = self.fetch_twitch_bearer_token().await?;
 
         let mut headers = HeaderMap::new();
 
@@ -55,10 +61,6 @@ impl crate::Twitchy {
             Err(build_error) => Err(TwitchyError::ReqwestError(build_error)),
         }
     }
-
-    pub async fn refresh_authentication(&mut self) -> Result<(), TwitchyError> {
-        self.setup_http_client().await
-    }
 }
 
 #[cfg(test)]
@@ -67,7 +69,7 @@ mod tests {
     use crate::{errors::TwitchyError, Twitchy};
 
     #[tokio::test]
-    async fn test_twitchy_authenticate_valid_keys() {
+    async fn test_twitchy_fetch_twitch_bearer_token_valid_keys() {
         let client_id =
             dotenv::var("TWITCH_CLIENT_ID").expect("ERROR: Missing TWITCH_CLIENT_ID ENV");
         let client_secret =
@@ -75,13 +77,13 @@ mod tests {
 
         let client = Twitchy::new(&client_id, &client_secret);
 
-        let authentication_result = client.authenticate().await;
+        let authentication_result = client.fetch_twitch_bearer_token().await;
 
         assert!(authentication_result.is_ok());
     }
 
     #[tokio::test]
-    async fn test_twitchy_authenticate_missing_client_id() {
+    async fn test_twitchy_fetch_twitch_bearer_token_missing_client_id() {
         let client_id = "";
 
         let client_secret =
@@ -89,7 +91,7 @@ mod tests {
 
         let client = Twitchy::new(client_id, &client_secret);
 
-        let authentication_result = client.authenticate().await;
+        let authentication_result = client.fetch_twitch_bearer_token().await;
 
         assert!(authentication_result.is_err());
 
@@ -99,7 +101,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_twitchy_authenticate_invalid_client_id() {
+    async fn test_twitchy_fetch_twitch_bearer_token_invalid_client_id() {
         let client_id = "this is not a real client id";
 
         let client_secret =
@@ -107,7 +109,7 @@ mod tests {
 
         let client = Twitchy::new(client_id, &client_secret);
 
-        let authentication_result = client.authenticate().await;
+        let authentication_result = client.fetch_twitch_bearer_token().await;
 
         assert!(authentication_result.is_err());
 
@@ -117,7 +119,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_twitchy_authenticate_missing_client_secret() {
+    async fn test_twitchy_fetch_twitch_bearer_token_missing_client_secret() {
         let client_id =
             dotenv::var("TWITCH_CLIENT_ID").expect("ERROR: Missing TWITCH_CLIENT_ID ENV");
 
@@ -125,7 +127,7 @@ mod tests {
 
         let client = Twitchy::new(&client_id, &client_secret);
 
-        let authentication_result = client.authenticate().await;
+        let authentication_result = client.fetch_twitch_bearer_token().await;
 
         assert!(authentication_result.is_err());
 
@@ -135,7 +137,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_twitchy_authenticate_invalid_client_secret() {
+    async fn test_twitchy_fetch_twitch_bearer_token_invalid_client_secret() {
         let client_id =
             dotenv::var("TWITCH_CLIENT_ID").expect("ERROR: Missing TWITCH_CLIENT_ID ENV");
 
@@ -143,7 +145,7 @@ mod tests {
 
         let client = Twitchy::new(&client_id, &client_secret);
 
-        let authentication_result = client.authenticate().await;
+        let authentication_result = client.fetch_twitch_bearer_token().await;
 
         assert!(authentication_result.is_err());
 
