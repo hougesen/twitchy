@@ -1,10 +1,34 @@
-use authentication::setup_http_client;
-use error::{TwitchErrorResponse, TwitchyError};
-
-pub mod ads;
-pub mod authentication;
-pub mod error;
-pub mod response;
+mod ads;
+mod analytics;
+mod authentication;
+mod bits;
+mod channel_points;
+mod channels;
+mod charity;
+mod chat;
+mod clips;
+mod entitlements;
+mod error;
+mod eventsub;
+mod extensions;
+mod games;
+mod goals;
+mod hype_train;
+mod moderation;
+mod music;
+mod polls;
+mod predictions;
+mod raids;
+mod response;
+mod schedule;
+mod search;
+mod streams;
+mod subscriptions;
+mod tags;
+mod teams;
+mod users;
+mod videos;
+mod whispers;
 
 pub struct Twitchy {
     pub client_id: String,
@@ -13,11 +37,14 @@ pub struct Twitchy {
 }
 
 impl Twitchy {
-    pub async fn new(client_id: &str, client_secret: &str) -> Result<Twitchy, TwitchyError> {
+    pub async fn new(
+        client_id: &str,
+        client_secret: &str,
+    ) -> Result<Twitchy, crate::error::TwitchyError> {
         Ok(Twitchy {
             client_id: client_id.to_string(),
             client_secret: client_secret.to_string(),
-            http_client: setup_http_client(client_id, client_secret).await?,
+            http_client: crate::authentication::setup_http_client(client_id, client_secret).await?,
         })
     }
 
