@@ -1,3 +1,7 @@
+pub mod error;
+mod utility;
+
+// twitch api
 mod ads;
 mod analytics;
 mod authentication;
@@ -8,7 +12,6 @@ mod charity;
 mod chat;
 mod clips;
 mod entitlements;
-mod error;
 mod eventsub;
 mod extensions;
 mod games;
@@ -22,7 +25,7 @@ mod raids;
 mod response;
 mod schedule;
 mod search;
-mod streams;
+pub mod streams;
 mod subscriptions;
 mod tags;
 mod teams;
