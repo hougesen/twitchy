@@ -69,3 +69,9 @@ impl std::fmt::Display for TwitchyError {
         }
     }
 }
+
+impl From<reqwest::Error> for TwitchyError {
+    fn from(value: reqwest::Error) -> Self {
+        TwitchyError::ReqwestError(value)
+    }
+}
