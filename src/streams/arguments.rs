@@ -1,9 +1,11 @@
+use typed_builder::TypedBuilder;
+
 pub enum TwitchGetStreamsType {
     All,
     Live,
 }
 
-#[derive(Default)]
+#[derive(Default, TypedBuilder)]
 pub struct GetStreamsArguments {
     /// A user ID used to filter the list of streams. Returns only the streams of those users that are broadcasting. You may specify a maximum of 100 IDs.
     pub user_ids: Option<Vec<String>>,
@@ -14,28 +16,4 @@ pub struct GetStreamsArguments {
     pub first: Option<u8>,
     pub before: Option<String>,
     pub after: Option<String>,
-}
-
-impl GetStreamsArguments {
-    pub fn new(
-        user_ids: Option<Vec<String>>,
-        user_logins: Option<Vec<String>>,
-        game_ids: Option<Vec<String>>,
-        r#type: Option<TwitchGetStreamsType>,
-        languages: Option<Vec<String>>,
-        first: Option<u8>,
-        before: Option<String>,
-        after: Option<String>,
-    ) -> Self {
-        Self {
-            user_ids,
-            user_logins,
-            game_ids,
-            r#type,
-            languages,
-            first,
-            before,
-            after,
-        }
-    }
 }

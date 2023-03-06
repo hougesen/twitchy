@@ -1,24 +1,10 @@
 use crate::{error::TwitchyError, response::unwrap_twitch_response};
 
-#[derive(Debug, serde::Deserialize)]
-pub struct StartCommercialResponseData {
-    /// The length of the commercial you requested. If you request a commercial that’s longer than 180 seconds, the API uses 180 seconds.
-    pub length: u8,
-    /// A message that indicates whether Twitch was able to serve an ad.
-    pub message: String,
-}
-
-#[derive(Debug, serde::Deserialize)]
-pub struct StartCommercialResponse {
-    /// An array that contains a single object with the status of your start commercial request.
-    pub data: Vec<StartCommercialResponseData>,
-    /// The number of seconds you must wait before running another commercial.  
-    pub retry_after: i32,
-}
+pub mod results;
 
 #[derive(serde::Serialize)]
-struct StartCommercialRequestBody {
-    broadcaster_id: String,
+struct StartCommercialRequestBody<'a> {
+    broadcaster_id: &'a str,
     commercial_length: i32,
 }
 
@@ -39,9 +25,9 @@ impl crate::Twitchy {
         &self,
         broadcaster_id: &str,
         commercial_length: i32,
-    ) -> Result<StartCommercialResponse, TwitchyError> {
+    ) -> Result<results::StartCommercialResponse, TwitchyError> {
         let request_body = StartCommercialRequestBody {
-            broadcaster_id: broadcaster_id.to_string(),
+            broadcaster_id,
             commercial_length,
         };
 
