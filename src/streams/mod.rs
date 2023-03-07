@@ -14,9 +14,9 @@ impl crate::Twitchy {
     /// Gets a list of all streams.
     pub async fn get_streams(
         &self,
-        arguments: Option<arguments::GetStreamsArguments>,
+        arguments: Option<arguments::GetStreamsArguments<'_>>,
     ) -> Result<results::GetStreamsResponse, crate::error::TwitchyError> {
-        let mut base_url = url::Url::from_str("https://api.twitch.tv/helix/streams").unwrap();
+        let mut base_url = url::Url::from_str("https://api.twitch.tv/helix/streams")?;
 
         let mut query_params = String::new();
 
