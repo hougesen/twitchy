@@ -26,12 +26,16 @@ pub struct InvalidArgumentError {
 #[derive(Debug)]
 pub enum TwitchyError {
     ReqwestError(reqwest::Error),
-    NotAuthenticated,
+
+    UrlParseError(url::ParseError),
+
+    InvalidHeaderValue(reqwest::header::InvalidHeaderValue),
 
     MissingClientId,
     MissingClientSecret,
     MissingAccessToken,
     InvalidParameters(String),
+
     // Twitch related
     BadRequest(String),
     Unauthorized(String),
@@ -47,7 +51,7 @@ impl std::error::Error for TwitchyError {}
 impl std::fmt::Display for TwitchyError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            TwitchyError::ReqwestError(s) => s.fmt(f),
+            TwitchyError::ReqwestError(e) => e.fmt(f),
             TwitchyError::BadRequest(message) => write!(f, "{}", message),
             TwitchyError::Unauthorized(message) => write!(f, "{}", message),
             TwitchyError::Forbidden(message) => write!(f, "{}", message),
@@ -65,7 +69,8 @@ impl std::fmt::Display for TwitchyError {
             TwitchyError::InvalidParameters(message) => {
                 write!(f, "Twitchy error: Invalid parameters {}", message)
             }
-            TwitchyError::NotAuthenticated => todo!(),
+            TwitchyError::UrlParseError(e) => e.fmt(f),
+            TwitchyError::InvalidHeaderValue(e) => e.fmt(f),
         }
     }
 }
@@ -73,5 +78,17 @@ impl std::fmt::Display for TwitchyError {
 impl From<reqwest::Error> for TwitchyError {
     fn from(value: reqwest::Error) -> Self {
         TwitchyError::ReqwestError(value)
+    }
+}
+
+impl From<url::ParseError> for TwitchyError {
+    fn from(value: url::ParseError) -> Self {
+        TwitchyError::UrlParseError(value)
+    }
+}
+
+impl From<reqwest::header::InvalidHeaderValue> for TwitchyError {
+    fn from(value: reqwest::header::InvalidHeaderValue) -> Self {
+        Self::InvalidHeaderValue(value)
     }
 }

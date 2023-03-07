@@ -38,10 +38,10 @@ pub(crate) async fn setup_http_client(
 
     headers.insert(
         "Authorization",
-        HeaderValue::from_str(&format!("Bearer {}", &token.access_token)).unwrap(),
+        HeaderValue::from_str(&format!("Bearer {}", &token.access_token))?,
     );
 
-    headers.insert("Client-Id", HeaderValue::from_str(client_id).unwrap());
+    headers.insert("Client-Id", HeaderValue::from_str(client_id)?);
 
     reqwest::Client::builder()
         .default_headers(headers)
