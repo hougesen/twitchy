@@ -1,3 +1,3 @@
 # twitchy
 
-Twitchy is a client library for the Twitch API.
+Twitchy is a very WIP client library for the Twitch API.
