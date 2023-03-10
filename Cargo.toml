@@ -1,6 +1,6 @@
 [package]
 name = "twitchy"
-version = "0.0.3"
+version = "0.0.4"
 edition = "2021"
 authors = ["Mads Hougesen <mads@mhouge.dk>"]
 description = "Twitchy is a WIP client library for the Twitch API"

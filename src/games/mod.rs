@@ -11,7 +11,7 @@ impl crate::Twitchy {
         &self,
         args: GetGamesArguments,
     ) -> Result<GetGamesResponse, crate::error::TwitchyError> {
-        let mut base_url = "https://".parse::<url::Url>()?;
+        let mut base_url = "https://api.twitch.tv/helix/games".parse::<url::Url>()?;
 
         let query = Querys::from(args);
 
