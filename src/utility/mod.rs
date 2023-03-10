@@ -1,3 +1,5 @@
+pub(crate) mod query;
+
 pub(crate) fn build_query_params<I, S>(items: I, seperator: &str) -> String
 where
     I: IntoIterator<Item = S>,
