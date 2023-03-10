@@ -18,7 +18,7 @@ impl From<GetGamesArguments> for Querys {
 
         if let Some(game_ids) = value.game_ids {
             if !game_ids.is_empty() {
-                game_ids.iter().for_each(|id| q.insert("game_id", id));
+                game_ids.iter().for_each(|id| q.insert("id", id));
             }
         }
 
