@@ -14,7 +14,7 @@ mod clips;
 mod entitlements;
 mod eventsub;
 mod extensions;
-mod games;
+pub mod games;
 mod goals;
 mod hype_train;
 mod moderation;
